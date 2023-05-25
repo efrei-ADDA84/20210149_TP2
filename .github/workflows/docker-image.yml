@@ -1,4 +1,4 @@
-name: Build and Publish Docker Image
+name: TP3 Build and Publish Docker Image 
 
 on:
   push:
