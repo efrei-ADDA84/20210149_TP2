@@ -16,7 +16,10 @@ jobs:
           uses: azure/login@v1
           with:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
-        
+            
+        - name: 'Set up environment variables'
+          run: echo "API_KEY=${{ secrets.API_KEY }}" >> $GITHUB_ENV
+
         - name: 'Build and push image'
           uses: azure/docker-login@v1
           with:
