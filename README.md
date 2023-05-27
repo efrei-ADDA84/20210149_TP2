@@ -49,6 +49,7 @@ Pour la réalisation de ce TP3 :
 Il a également fallu penser à changer la localisation (france south) dans la commande curl à exécuter pour obtenir la réponse à la requête.
 
 Les prinicipales difficultées rencontrées lors de ce TP étaient donc les suivantes : 
+- la création du github action
 - la cohérence des ports à utiliser
 - la création d'une varibale d'environnement à partir d'une variable secrète stockée sur Git
 
