@@ -1,17 +1,34 @@
-# 20210149_TP2 (le TP3 est dans la branche TP3 de ce repository)
+# 20210149_TP4 (le TP4 est dans la branche TP4 de ce repository)
 
 THEIVENDIRAN Thushanthy
 
-Pour la réalisation du TP2, voici les étapes que j'ai suivi :
+NB : En raison d'un problème technique lié à mes token Git, je n'ai pas pu push correctement mon code sur le repository. J'ai du créer une branche à partir de code du TP2 et n'ai pas retirer ces fichiers polluants. Ils sont donc confondus avec mes fichiers du TP4.
 
-1. Création d'un repository sur Docker Hub : tp2
+Pour la réalisation du TP4, voici les étapes que j'ai suivi :
 
-2. Configuration d'un workflow Github Action de façon à build et push l'image sur Docker Hub à chaque nouveau commit Git. Pour cette étape-ci, je me suis aidé de la documentation Docker Hub et ai spécié que le tag à utiliser est le tag thushanthy/tp2:latest
+1. Création de 6 fichiers distincts :
+   - data.tf : pour récupérer des informations sur un sous-réseau (azurerm_subnet) et un réseau virtuel (azurerm_virtual_network) dans Azure, puis les exposer via des  (output)
+   - network.tf : pour déployer 4 ressources sur Azure et créer une adresse IP publique, une interface réseau, une paire de clés privée / publique, un fichier local contenant la clé publique SSH
+   - outouputs.tf : qui contient les sorties récupérés à partir des ressources déployées
+   - provider.tf : pour définir les fournisseurs (providers) requis par l'infrastructure Terraform
+   - variables.tf : pour définir les différentes variables et ainsi veiller au respect des différentes contraintes
+   - vm.tf : pour créer une ressource de machine virtuelle Linux dans Azure en utilisant le fournisseur AzureRM. 
+     La configuration de ces fichiers prend en compte l'ensemble des contraintes énoncées.
+    
+3. Il faut ensuite exécuter les commandes suivante pour pouvoir créer une machine virtuelle sur Azure :
+- az login : pour s'authentifier sur Azure
+- terraform init : pour initialiser un nouveau répertoire de travail Terraform
+- terraform plan : pour créer un plan d'exécution Terraform
+- terraform apply : pour appliquer les changements décrits dans le plan Terraform. Cette commande exécute réellement les actions nécessaires pour créer, mettre à jour ou supprimer les ressources
 
-3. Transformation du wrapper précédemment créé en API. Pour cela j'ai réutilisé le code Python du TP1 et l'ai adapté : le fichier api.py contient le code, qui à partir d'une longitude et une latitude spécifiée dans l'URL, récupère la variable d'environnement API_KEY et renvoie, sur une page web, le résultat de la requête sous format JSON. J'ai pour cela, utilisé les bibliothèques os et requests de Python, mais également le package Flask. Celui-ci permet de récupérer les arguments spécifiés dans l'URL (longitude et latitude) et de renvoyer un élément JSON sur une page web.
+La principale difficulté consistait à créer le bon type de bloc (data, resource, output...) et de spécifier correctement les variables et arguments à utiliser. 
 
-4. Création d'un répertoire avec un DockerFile comme pour le TP1. Seulement, pour ce TP là on précise que l'on souhaite également installer la bibliothèque flask. Cette fois-ci, j'ai également préciser les versions des packages que je souhaitais.
+J'ai également eu une erreur quant à l'utilistion de l'ID de souscription lors de l'exécution de la commande terraform apply : 
+A resource with the ID "/subscriptions/765266c6-9a23-4638-af32-dd1e32613047/resourceGroups/ADDA84-CTP/providers/Microsoft.Network/publicIPAddresses/public-ip" already exists - to be managed via Terraform this resource needs to be imported into the State.
+Afin de la résoudre, j'ai donc exécuter la commande suivante dans le Termial : 
+terraform import azurerm_public_ip.tp4 /subscriptions/765266c6-9a23-4638-af32-dd1e32613047/resourceGroups/ADDA84-CTP/providers/Microsoft.Network/publicIPAddresses/public-ip
 
-5. On vérifie que l'action rajouté au workflow fonctionne correctement avec les commandes "git add -A", "git commit -m "message"" et "git push". Chacune des actions est bien répertorié sur Git.
-
-La principale difficulté à laquelle j'ai fait face dans ce TP, c'est l'utilisation des ports et des hosts. Etant donné que je n'avais pas construits de "bridge" je ne pouvais pas faire simultanément de test en local et sur ma machine virtuelle. J'avais également une erreur dans mon URL, ce qui me renvoyait sur une page avec l'erreur "internal server error".
+Concernant l'intérêt de l'utilisation de Terraform pour deployer des ressources sur le cloud plutôt que la CLI ou l'interface utilisateur, Terraform offre plusieurs avantages : 
+- Terraform facilite la gestion, la collaboration et le contrôle des modifications de l'infrastructure étant donné que l'infrastructure est codée, versionnée et peut être traitée comme du code source
+- Terraform permet d'automatiser le processus de déploiement et de gestion des ressources sur le cloud
+- Egalement, Terraform gère les dépendances entre les ressources et suit l'état de l'infrastructure
